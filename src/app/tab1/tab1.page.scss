@@ -1,0 +1,208 @@
+.search-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+
+  ion-searchbar {
+    flex: 1;
+  }
+
+  .add-btn {
+    height: 44px;
+    --border-radius: 12px;
+  }
+}
+
+.main-title {
+  text-align: center;
+  margin: 1rem 0 1.5rem 0;
+
+  h1 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #1e1e1e;
+    text-align: center;      /* 🔹 Centra el texto */
+    margin: 0;
+  }
+
+  .subtitle {
+    font-size: 0.95rem;
+    color: #666;
+    text-align: center;      /* 🔹 Centra también el subtítulo */
+    margin-top: 0.25rem;
+  }
+}
+
+/* Espaciado general */
+.search-bar {
+  margin-bottom: 1rem;
+}
+
+.summary-card {
+  margin-bottom: 1.5rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+.card {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 120px;
+  border-radius: 16px;
+  color: #333;
+  font-weight: 600;
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.card:hover {
+  transform: scale(1.03);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.empty {
+  grid-column: span 2;
+  text-align: center;
+  margin-top: 2rem;
+}
+
+ion-fab {
+  z-index: 100;
+}
+
+ion-fab-button {
+  --border-radius: 50%;
+  --box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+}
+
+ion-fab-list {
+  ion-fab-button {
+    margin-bottom: 0.5rem;
+  }
+}
+
+/* === Barra de progreso y porcentaje dentro de las tarjetas === */
+.card {
+  flex-direction: column; /* Para apilar nombre, barra y texto */
+  padding: 1rem;
+}
+
+.cat-name {
+  font-size: 1rem;
+  margin-bottom: 0.4rem;
+}
+
+/* Barra de progreso */
+ion-progress-bar {
+  width: 100%;
+  --height: 8px;
+  border-radius: 8px;
+  margin-top: 0.25rem;
+  margin-bottom: 0.25rem;
+  transition: all 0.6s ease; /* animación suave */
+}
+
+/* Texto del porcentaje */
+.progress-text {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #444;
+}
+
+/* Animación de entrada suave */
+@keyframes fadeInCard {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.card {
+  animation: fadeInCard 0.4s ease forwards;
+}
+
+/* === Barra de progreso personalizada === */
+ion-progress-bar {
+  position: relative;
+  width: 100%;
+  height: 14px; /* Más gruesa */
+  border-radius: 10px;
+  background-color: #fff; /* Fondo blanco */
+  overflow: hidden;
+  margin-top: 0.3rem;
+  margin-bottom: 0.3rem;
+}
+
+/* Parte interna (relleno verde) */
+ion-progress-bar::part(track) {
+  background: #fff !important; /* Fondo base */
+}
+
+ion-progress-bar::part(progress) {
+  background: linear-gradient(90deg, #43a047, #66bb6a); /* Verde degradado */
+  border-radius: 10px;
+  transition: width 0.5s ease;
+}
+
+/* Texto del porcentaje */
+.progress-text {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #2e7d32;
+  text-align: center;
+}
+
+/* Animación general */
+.card {
+  flex-direction: column;
+  padding: 1rem;
+  animation: fadeInCard 0.4s ease forwards;
+}
+
+/* Animación de aparición */
+@keyframes fadeInCard {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.summary-card {
+  padding: 0.5rem 1rem;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  text-align: center;
+  max-width: 340px; // 🔹 ancho controlado
+  margin: 0 auto 1rem auto;
+
+  ion-card-header {
+    padding-bottom: 0.25rem;
+  }
+
+  ion-card-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #333;
+  }
+
+  .chart-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+  }
+}

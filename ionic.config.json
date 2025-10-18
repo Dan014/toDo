@@ -1,7 +1,9 @@
 {
   "name": "ionic-todo",
   "integrations": {
-    "capacitor": {}
+    "cordova": {
+      "root": "cordova"
+    }
   },
   "type": "angular"
 }

@@ -1,17 +1,78 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-      Tab 1
-    </ion-title>
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Home</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Tab 1</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content class="ion-padding">
 
-  <app-explore-container name="Tab 1 page"></app-explore-container>
+  <!-- 🟦 Título principal -->
+  <div class="main-title">
+    <h1>Lista de tareas</h1>
+    <p class="subtitle">Gestiona tus categorías y progreso fácilmente</p>
+  </div>
+
+  <!-- 🔍 Barra de búsqueda -->
+  <div class="search-bar">
+    <ion-searchbar placeholder="Buscar categoría..." [(ngModel)]="searchTerm" show-clear-button="always">
+    </ion-searchbar>
+  </div>
+
+  <!-- 📊 Tarjeta resumen -->
+  <!-- 📊 Tarjeta resumen -->
+  <ion-card class="summary-card" *ngIf="showDashboard">
+    <ion-card-header>
+      <ion-card-title>Progreso por Categoría</ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content class="chart-container">
+      <apx-chart [series]="chartSeries" [chart]="chartOptions.chart" [labels]="chartOptions.labels"
+        [fill]="chartOptions.fill" [stroke]="chartOptions.stroke" [legend]="chartOptions.legend"
+        [responsive]="chartOptions.responsive">
+      </apx-chart>
+    </ion-card-content>
+  </ion-card>
+
+
+  <div class="main-title">
+    <h1>Mis Categorias</h1>
+  </div>
+
+  <!-- 🟩 Grid de categorías -->
+  <div class="grid">
+    <div *ngFor="let cat of filteredCategories; let i = index" class="card"
+      [ngStyle]="{'background-color': getCategoryColor(cat.id, i)}" (click)="openCategory(cat)">
+
+
+      <span class="cat-name">{{ cat.name }}</span>
+
+      <!-- 🔵 Barra de progreso -->
+      <ion-progress-bar [value]="getCategoryProgress(cat.id)" color="success" class="progress-bar">
+      </ion-progress-bar>
+
+      <small class="progress-text">
+        {{ (getCategoryProgress(cat.id) * 100) | number:'1.0-0' }}%
+      </small>
+    </div>
+
+    <div *ngIf="filteredCategories.length === 0" class="empty">
+      <ion-text color="medium">No hay categorías que coincidan</ion-text>
+    </div>
+  </div>
+
+  <!-- ⚡ FAB flotante -->
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button color="primary">
+      <ion-icon name="add-outline"></ion-icon>
+    </ion-fab-button>
+    <ion-fab-list side="top">
+      <ion-fab-button color="success" (click)="goToAddTask()">
+        <ion-icon name="create-outline"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-button color="tertiary" (click)="goToCategories()">
+        <ion-icon name="folder-open-outline"></ion-icon>
+      </ion-fab-button>
+    </ion-fab-list>
+  </ion-fab>
+
 </ion-content>
