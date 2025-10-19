@@ -1,5 +1,5 @@
 {
-  "name": "ionic-todo",
+  "name": "taskMate",
   "integrations": {
     "cordova": {
       "root": "cordova"

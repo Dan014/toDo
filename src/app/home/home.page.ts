@@ -41,6 +41,7 @@ interface ChartOptions {
   stroke: ApexStroke;
   legend: ApexLegend;
   responsive: ApexResponsive[];
+  tooltip?: ApexTooltip; // 👈 agrega esta línea
 }
 
 @Component({
@@ -196,6 +197,25 @@ export class HomePage {
       },
       legend: {
         show: false,
+      },
+      tooltip: {
+        enabled: true,
+        theme: 'light',
+        fillSeriesColor: false,
+        y: {
+          formatter: (value: number, opts?: any) => {
+            // obtiene el nombre de la categoría desde las etiquetas
+            const label = opts?.w?.globals?.labels[opts?.seriesIndex] || '';
+            return `${label}: ${value.toFixed(1)}%`;
+          },
+          title: {
+            formatter: () => '',
+          },
+        },
+        style: {
+          fontSize: '14px',
+          fontFamily: 'Poppins, sans-serif',
+        },
       },
       responsive: [
         {
