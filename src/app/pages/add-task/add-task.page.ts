@@ -51,8 +51,6 @@ export class AddTaskPage {
     const existingTasks: Task[] = (await this._storage?.get('tasks')) || [];
     existingTasks.push(newTask);
     await this._storage?.set('tasks', existingTasks);
-
-    // ✅ Volvemos al Home
     this.router.navigate(['/']);
   }
 }

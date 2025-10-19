@@ -14,13 +14,11 @@ import {
   ApexLegend,
 } from 'ng-apexcharts';
 
-// Firebase SDK nativo (no usar AngularFire aquí)
 import {
   fetchAndActivate,
   getBoolean,
   getRemoteConfig,
 } from 'firebase/remote-config';
-// 🔥 Firebase SDK nativo
 import { initializeApp, getApps, getApp } from 'firebase/app';
 import { environment } from 'src/environments/environment';
 
@@ -38,7 +36,7 @@ interface Category {
 interface ChartOptions {
   chart: ApexChart;
   labels: string[];
-  colors: string[]; // 👈 AÑADIR ESTA LÍNEA
+  colors: string[];
   fill: ApexFill;
   stroke: ApexStroke;
   legend: ApexLegend;
@@ -46,13 +44,13 @@ interface ChartOptions {
 }
 
 @Component({
-  selector: 'app-tab1',
+  selector: 'app-home',
   standalone: true,
   imports: [IonicModule, CommonModule, FormsModule, NgApexchartsModule],
-  templateUrl: './tab1.page.html',
-  styleUrls: ['./tab1.page.scss'],
+  templateUrl: './home.page.html',
+  styleUrls: ['./home.page.scss'],
 })
-export class Tab1Page {
+export class HomePage {
   private _storage: Storage | null = null;
   @ViewChild('chart') chart!: ChartComponent;
 
@@ -106,7 +104,7 @@ export class Tab1Page {
       console.log('✅ Dashboard visible:', this.showDashboard);
     } catch (error) {
       console.warn('⚠️ Error al obtener Remote Config:', error);
-      this.showDashboard = true; // fallback
+      this.showDashboard = true;
     }
   }
 
@@ -119,9 +117,7 @@ export class Tab1Page {
     this._storage = await this.storage.create();
     this.categories = (await this._storage?.get('categories')) || [];
     this.tasks = (await this._storage?.get('tasks')) || [];
-
     this.updateChart();
-
     this.cdr.detectChanges();
   }
 
@@ -163,6 +159,7 @@ export class Tab1Page {
     legend: { position: 'bottom' },
     responsive: [],
   };
+
   updateChart() {
     const data: number[] = [];
     const labels: string[] = [];

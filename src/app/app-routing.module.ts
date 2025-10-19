@@ -4,23 +4,25 @@ import { RouterModule, Routes } from '@angular/router';
 const routes: Routes = [
   {
     path: '',
-    loadComponent: () => import('./tab1/tab1.page').then(m => m.Tab1Page),
+    loadComponent: () => import('./home/home.page').then((m) => m.HomePage),
     pathMatch: 'full',
   },
   {
     path: 'categories',
     loadComponent: () =>
-      import('./pages/categories/categories.page').then(m => m.CategoriesPage),
+      import('./pages/categories/categories.page').then(
+        (m) => m.CategoriesPage
+      ),
   },
   {
     path: 'tasks/:categoryId',
     loadComponent: () =>
-      import('./pages/task/tasks.page').then(m => m.TasksPage),
+      import('./pages/task/tasks.page').then((m) => m.TasksPage),
   },
   {
     path: 'add-task',
     loadComponent: () =>
-      import('./pages/add-task/add-task.page').then(m => m.AddTaskPage),
+      import('./pages/add-task/add-task.page').then((m) => m.AddTaskPage),
   },
 
   { path: '**', redirectTo: '' },
@@ -30,4 +32,4 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}
