@@ -17,33 +17,22 @@
       <!-- Campo: nombre de la tarea -->
       <ion-item>
         <ion-label position="stacked">Título</ion-label>
-        <ion-input
-          placeholder="Escribe el nombre de la tarea"
-          [(ngModel)]="title">
+        <ion-input placeholder="Escribe el nombre de la tarea" [(ngModel)]="title">
         </ion-input>
       </ion-item>
 
       <!-- Campo: selección de categoría -->
       <ion-item>
         <ion-label position="stacked">Categoría</ion-label>
-        <ion-select
-          interface="popover"
-          placeholder="Selecciona una categoría"
-          [(ngModel)]="selectedCategoryId">
-          <ion-select-option
-            *ngFor="let c of categories"
-            [value]="c.id">
+        <ion-select interface="popover" placeholder="Selecciona una categoría" [(ngModel)]="selectedCategoryId">
+          <ion-select-option *ngFor="let c of categories" [value]="c.id">
             {{ c.name }}
           </ion-select-option>
         </ion-select>
       </ion-item>
 
       <!-- Botón agregar -->
-      <ion-button
-        expand="block"
-        color="success"
-        class="ion-margin-top"
-        [disabled]="!title.trim() || !selectedCategoryId"
+      <ion-button expand="block" class="ion-margin-top" [disabled]="!title.trim() || !selectedCategoryId"
         (click)="addTask()">
         Agregar tarea
       </ion-button>

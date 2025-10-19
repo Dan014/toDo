@@ -9,6 +9,7 @@ import { IonicStorageModule } from '@ionic/storage-angular';
 // 🔥 Importa Firebase directamente
 import { initializeApp } from 'firebase/app';
 import { environment } from '../environments/environment';
+import { SplashScreenComponent } from './pages/loading/splash-screen.component';
 
 // Inicializa Firebase una sola vez al cargar el módulo
 initializeApp(environment.firebase);
@@ -20,6 +21,7 @@ initializeApp(environment.firebase);
     IonicModule.forRoot(),
     AppRoutingModule,
     IonicStorageModule.forRoot(),
+    SplashScreenComponent,
   ],
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
   bootstrap: [AppComponent],

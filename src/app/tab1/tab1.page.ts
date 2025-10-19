@@ -1,10 +1,10 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { Storage } from '@ionic/storage-angular';
 import { FormsModule } from '@angular/forms';
-import { NgApexchartsModule } from 'ng-apexcharts';
+import { ChartComponent, NgApexchartsModule } from 'ng-apexcharts';
 import {
   ApexChart,
   ApexNonAxisChartSeries,
@@ -15,7 +15,11 @@ import {
 } from 'ng-apexcharts';
 
 // Firebase SDK nativo (no usar AngularFire aquí)
-import { fetchAndActivate, getBoolean, getRemoteConfig } from 'firebase/remote-config';
+import {
+  fetchAndActivate,
+  getBoolean,
+  getRemoteConfig,
+} from 'firebase/remote-config';
 // 🔥 Firebase SDK nativo
 import { initializeApp, getApps, getApp } from 'firebase/app';
 import { environment } from 'src/environments/environment';
@@ -34,13 +38,12 @@ interface Category {
 interface ChartOptions {
   chart: ApexChart;
   labels: string[];
-  colors: string[];          // 👈 AÑADIR ESTA LÍNEA
+  colors: string[]; // 👈 AÑADIR ESTA LÍNEA
   fill: ApexFill;
   stroke: ApexStroke;
   legend: ApexLegend;
   responsive: ApexResponsive[];
 }
-
 
 @Component({
   selector: 'app-tab1',
@@ -51,91 +54,90 @@ interface ChartOptions {
 })
 export class Tab1Page {
   private _storage: Storage | null = null;
+  @ViewChild('chart') chart!: ChartComponent;
 
   categories: Category[] = [];
   tasks: Task[] = [];
-pastelColors = [
-  '#E3F2FD', // azul muy claro (casi blanco)
-  '#BBDEFB', // azul pastel suave
-  '#90CAF9', // azul cielo
-  '#64B5F6', // azul suave medio
-  '#42A5F5', // azul vivo pastel
-  '#2196F3', // azul principal (Material Blue)
-  '#1E88E5', // azul un poco más fuerte
-  '#1976D2', // azul intenso (para contraste)
-];
+  pastelColors = [
+    '#A7C7E7', // azul grisáceo claro
+    '#7EA6E0', // azul acero
+    '#5E8DD3', // azul medio frío
+    '#4477C4', // azul profesional
+    '#3664B0', // azul sobrio
+    '#2B56A1', // azul oscuro elegante
+    '#244A8C', // azul profundo
+    '#1A3973', // azul noche
+  ];
 
   searchTerm = '';
   showDashboard = true; // valor local por defecto
 
- constructor(
+  constructor(
     private storage: Storage,
     private router: Router,
+    private cdr: ChangeDetectorRef
   ) {}
 
-  
-async ngOnInit() {
-  await this.loadData();
-  this.updateChart();
+  async ngOnInit() {
+    await this.loadData();
+    this.updateChart();
 
-  // 🔥 Inicializar Firebase si aún no está inicializado
-  const app = getApps().length ? getApp() : initializeApp(environment.firebase);
-  const remoteConfig = getRemoteConfig(app);
-  remoteConfig.settings.minimumFetchIntervalMillis = 10000; // 10s para pruebas
+    // 🔥 Inicializar Firebase si aún no está inicializado
+    const app = getApps().length
+      ? getApp()
+      : initializeApp(environment.firebase);
+    const remoteConfig = getRemoteConfig(app);
+    remoteConfig.settings.minimumFetchIntervalMillis = 10000; // 10s para pruebas
 
-  // 👇 Valor por defecto antes de contactar con Firebase
-  this.showDashboard = true;
+    // 👇 Valor por defecto antes de contactar con Firebase
+    this.showDashboard = true;
 
- try {
-  console.log('🚀 Intentando conectar a Firebase Remote Config...');
-  const activated = await fetchAndActivate(remoteConfig);
+    try {
+      console.log('🚀 Intentando conectar a Firebase Remote Config...');
+      const activated = await fetchAndActivate(remoteConfig);
 
-  console.log('📡 Estado fetchAndActivate:', activated);
-  console.log('🔍 Valores actuales de Remote Config:', remoteConfig);
+      console.log('📡 Estado fetchAndActivate:', activated);
+      console.log('🔍 Valores actuales de Remote Config:', remoteConfig);
 
-  const remoteValue = getBoolean(remoteConfig, 'showDashboard');
-  console.log('🎚️ Valor de showDashboard desde Firebase:', remoteValue);
+      const remoteValue = getBoolean(remoteConfig, 'showDashboard');
+      console.log('🎚️ Valor de showDashboard desde Firebase:', remoteValue);
 
-  this.showDashboard = remoteValue !== undefined ? remoteValue : true;
-  console.log('✅ Dashboard visible:', this.showDashboard);
-  
-} catch (error) {
-  console.warn('⚠️ Error al obtener Remote Config:', error);
-  this.showDashboard = true; // fallback
-}
-
-}
-
-
+      this.showDashboard = remoteValue !== undefined ? remoteValue : true;
+      console.log('✅ Dashboard visible:', this.showDashboard);
+    } catch (error) {
+      console.warn('⚠️ Error al obtener Remote Config:', error);
+      this.showDashboard = true; // fallback
+    }
+  }
 
   async ionViewWillEnter() {
     await this.loadData();
     this.updateChart();
   }
 
-
   async loadData() {
-  this._storage = await this.storage.create();
-  this.categories = (await this._storage?.get('categories')) || [];
-  this.tasks = (await this._storage?.get('tasks')) || [];
+    this._storage = await this.storage.create();
+    this.categories = (await this._storage?.get('categories')) || [];
+    this.tasks = (await this._storage?.get('tasks')) || [];
 
-  this.updateChart(); // 👈 mover aquí garantiza sincronía
-}
+    this.updateChart();
 
+    this.cdr.detectChanges();
+  }
 
   /** Filtra las categorías según el término de búsqueda */
   get filteredCategories() {
     if (!this.searchTerm.trim()) return this.categories;
-    return this.categories.filter(cat =>
+    return this.categories.filter((cat) =>
       cat.name.toLowerCase().includes(this.searchTerm.toLowerCase())
     );
   }
 
   /** Calcula el progreso (0–1) de tareas completadas por categoría */
   getCategoryProgress(categoryId: string): number {
-    const related = this.tasks.filter(t => t.categoryId === categoryId);
+    const related = this.tasks.filter((t) => t.categoryId === categoryId);
     if (related.length === 0) return 0;
-    const done = related.filter(t => t.completed).length;
+    const done = related.filter((t) => t.completed).length;
     return done / related.length;
   }
 
@@ -155,74 +157,71 @@ async ngOnInit() {
   chartOptions: ChartOptions = {
     chart: { type: 'donut' },
     labels: [],
-    colors: [],                // 👈 Y AQUÍ INICIALIZARLA
+    colors: [],
     fill: { type: 'solid' },
     stroke: { width: 0 },
     legend: { position: 'bottom' },
     responsive: [],
   };
+  updateChart() {
+    const data: number[] = [];
+    const labels: string[] = [];
+    const colors: string[] = [];
 
+    this.categories.forEach((cat, index) => {
+      const related = this.tasks.filter((t) => t.categoryId === cat.id);
+      const done = related.filter((t) => t.completed).length;
+      const percent = related.length ? (done / related.length) * 100 : 0;
 
+      data.push(percent);
+      labels.push(cat.name);
+      colors.push(this.pastelColors[index % this.pastelColors.length]);
+    });
 
- updateChart() {
-  const data: number[] = [];
-  const labels: string[] = [];
-  const colors: string[] = [];
+    this.chartSeries = data.length ? data : [0];
 
-  this.categories.forEach((cat, index) => {
-    const related = this.tasks.filter(t => t.categoryId === cat.id);
-    const done = related.filter(t => t.completed).length;
-    const percent = related.length ? (done / related.length) * 100 : 0;
-
-    data.push(percent);
-    labels.push(cat.name);
-    colors.push(this.pastelColors[index % this.pastelColors.length]); // 👈 color fijo por índice
-  });
-
-  this.chartSeries = data.length ? data : [0];
-  this.chartOptions = {
-    chart: {
-      type: 'donut',
-      width: 280,
-      height: 280,
-    },
-    labels,
-    colors, // 👈 mismo arreglo que se usa en las tarjetas
-    fill: {
-      type: 'solid',
-    },
-    stroke: {
-      width: 2,
-      colors: ['#ffffff'], // mejora contraste
-    },
-    legend: {
-      position: 'bottom',
-      labels: {
-        colors: '#333',
+    this.chartOptions = {
+      chart: {
+        type: 'donut',
+        width: 280,
+        height: 280,
+        dropShadow: { enabled: false },
+        background: 'transparent',
       },
-    },
-    responsive: [
-      {
-        breakpoint: 480,
-        options: {
-          chart: {
-            width: 250,
-          },
-          legend: {
-            position: 'bottom',
+      labels,
+      colors,
+      fill: {
+        type: 'solid',
+      },
+      stroke: {
+        width: 2,
+        colors: ['#ffffff'],
+      },
+      legend: {
+        show: false,
+      },
+      responsive: [
+        {
+          breakpoint: 480,
+          options: {
+            chart: {
+              width: 250,
+            },
           },
         },
-      },
-    ],
-  };
-}
+      ],
+    };
 
+    if (this.chart) {
+      this.chart.updateSeries(this.chartSeries, true);
+    }
 
-  getCategoryColor(categoryId: string, index?: number): string {
-    // Intentamos mantener el color fijo por orden original
-    const catIndex = this.categories.findIndex(c => c.id === categoryId);
-    const effectiveIndex = catIndex !== -1 ? catIndex : (index ?? 0);
-    return this.pastelColors[effectiveIndex % this.pastelColors.length];
+    this.cdr.detectChanges();
   }
 
+  getCategoryColor(categoryId: string, index?: number): string {
+    const catIndex = this.categories.findIndex((c) => c.id === categoryId);
+    const effectiveIndex = catIndex !== -1 ? catIndex : index ?? 0;
+    return this.pastelColors[effectiveIndex % this.pastelColors.length];
+  }
 }

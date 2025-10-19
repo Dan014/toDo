@@ -1,0 +1,26 @@
+.splash-container {
+  position: fixed;
+  inset: 0;
+  background: #1878E7;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  transition: opacity 1s ease-in-out;
+}
+
+.splash-container.fade-out {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.splash-logo {
+  width: 120px;
+  animation: bounceIn 1s ease forwards;
+}
+
+@keyframes bounceIn {
+  0% { transform: scale(0.5); opacity: 0; }
+  60% { transform: scale(1.1); opacity: 1; }
+  100% { transform: scale(1); }
+}

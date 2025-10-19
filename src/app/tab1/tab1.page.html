@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar color="primary">
-    <ion-title>Home</ion-title>
+    <ion-title>TaskMate</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -8,7 +8,7 @@
 
   <!-- 🟦 Título principal -->
   <div class="main-title">
-    <h1>Lista de tareas</h1>
+    <h1>Bienvenido</h1>
     <p class="subtitle">Gestiona tus categorías y progreso fácilmente</p>
   </div>
 
@@ -19,19 +19,26 @@
   </div>
 
   <!-- 📊 Tarjeta resumen -->
-  <!-- 📊 Tarjeta resumen -->
   <ion-card class="summary-card" *ngIf="showDashboard">
-    <ion-card-header>
-      <ion-card-title>Progreso por Categoría</ion-card-title>
-    </ion-card-header>
 
     <ion-card-content class="chart-container">
-      <apx-chart [series]="chartSeries" [chart]="chartOptions.chart" [labels]="chartOptions.labels"
-        [fill]="chartOptions.fill" [stroke]="chartOptions.stroke" [legend]="chartOptions.legend"
-        [responsive]="chartOptions.responsive">
-      </apx-chart>
+
+      <!-- Si hay datos, muestra la gráfica -->
+      <div *ngIf="chartSeries.length > 0 && categories.length > 0; else noData">
+        <apx-chart [series]="chartSeries" [chart]="chartOptions.chart" [labels]="chartOptions.labels"
+          [fill]="chartOptions.fill" [stroke]="chartOptions.stroke" [legend]="chartOptions.legend"
+          [colors]="chartOptions.colors" [responsive]="chartOptions.responsive">
+        </apx-chart>
+      </div>
+
+      <!-- Template cuando no hay categorías -->
+      <ng-template #noData>
+        <ion-card-title>Crea una categoria</ion-card-title>
+      </ng-template>
+
     </ion-card-content>
   </ion-card>
+
 
 
   <div class="main-title">
@@ -62,17 +69,24 @@
 
   <!-- ⚡ FAB flotante -->
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <!-- Botón principal -->
     <ion-fab-button color="primary">
-      <ion-icon name="add-outline"></ion-icon>
+      <ion-icon name="add-circle-outline"></ion-icon>
     </ion-fab-button>
+
+    <!-- Lista de opciones -->
     <ion-fab-list side="top">
+      <!-- 🟩 Agregar tarea -->
       <ion-fab-button color="success" (click)="goToAddTask()">
-        <ion-icon name="create-outline"></ion-icon>
+        <ion-icon name="checkbox-outline"></ion-icon>
       </ion-fab-button>
+
+      <!-- 🟪 Ir a categorías -->
       <ion-fab-button color="tertiary" (click)="goToCategories()">
-        <ion-icon name="folder-open-outline"></ion-icon>
+        <ion-icon name="grid-outline"></ion-icon>
       </ion-fab-button>
     </ion-fab-list>
   </ion-fab>
+
 
 </ion-content>

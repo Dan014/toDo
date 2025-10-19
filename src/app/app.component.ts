@@ -7,5 +7,9 @@ import { Component } from '@angular/core';
   standalone: false,
 })
 export class AppComponent {
-  constructor() {}
+  showSplash = true;
+
+  constructor() {
+    setTimeout(() => (this.showSplash = false), 2000);
+  }
 }
