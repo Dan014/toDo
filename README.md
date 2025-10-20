@@ -45,6 +45,6 @@ El código se estructuró siguiendo las convenciones de Angular y Ionic, con nom
 
 ### Instalación
 ```bash
-git clone https://github.com/tuusuario/ionic-todo.git
+git clone https://github.com/Dan014/toDo.git
 cd ionic-todo
 npm install
